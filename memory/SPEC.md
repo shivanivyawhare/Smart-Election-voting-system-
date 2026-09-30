@@ -34,6 +34,16 @@ blockchain_blocks (hash-chained ledger), notifications, system_settings, counter
 4. **Integrity**: `/api/blockchain/verify` recomputes the whole chain;
    `/api/results/{id}/integrity` recomputes the snapshot hash.
 
+## Monitoring extras (`backend/routers/monitoring.py`)
+- `GET /api/admin/turnout/alerts` (`monitor:view`) — per-constituency turnout of every OPEN
+  election vs the election mean; a constituency below 80/60/40% of the mean is flagged
+  MEDIUM/HIGH/CRITICAL. Rendered on `/admin/voting-monitor` (polls 20s).
+- `GET /api/voter/activity` — the signed-in voter's own audit rows (sign-in, identity, face,
+  liveness, voting) + security events, IPs masked. Rendered on `/voter/security`.
+- `GET /api/admin/results/{id}/certificate` (`report:view`) — reportlab PDF result
+  certificate (totals, turnout, result hash, ledger block, verification), from `/admin/reports`.
+- `/admin/blockchain` polls blocks every 8s and badges newly appended blocks (live ledger feed).
+
 ## Election lifecycle
 DRAFT → SCHEDULED → OPEN → (PAUSED) → CLOSED → COUNTING → RESULTS_PUBLISHED → ARCHIVED.
 Illegal transitions 409. Past-end OPEN elections lazily auto-close (audited).

@@ -1,5 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Boxes, CheckCircle2, Loader2, ShieldCheck, XCircle } from "lucide-react";
+import { Boxes, CheckCircle2, Loader2, Radio, ShieldCheck, XCircle } from "lucide-react";
 import { apiGet } from "@/lib/api";
 import type { Block, ChainVerification } from "@/lib/types";
 import { fmtDateTime } from "@/lib/format";
@@ -14,6 +15,7 @@ export default function Blockchain() {
   const blocksQ = useQuery({
     queryKey: ["admin", "blocks"],
     queryFn: () => apiGet<{ total: number; blocks: Block[]; latest: Block | null }>("/blockchain/blocks?limit=100"),
+    refetchInterval: 8_000,
     retry: false,
   });
   const verifyQ = useQuery({
@@ -23,10 +25,29 @@ export default function Blockchain() {
     retry: false,
   });
 
+  const seen = useRef<Set<number> | null>(null);
+  const [newIndexes, setNewIndexes] = useState<number[]>([]);
+  const topIndex = blocksQ.data?.latest?.index ?? null;
+
+  useEffect(() => {
+    const blocks = blocksQ.data?.blocks ?? [];
+    if (!blocks.length) return;
+    if (seen.current === null) {
+      seen.current = new Set(blocks.map((b) => b.index));
+      return;
+    }
+    const fresh = blocks.filter((b) => !seen.current!.has(b.index)).map((b) => b.index);
+    if (fresh.length) {
+      fresh.forEach((i) => seen.current!.add(i));
+      setNewIndexes((prev) => [...fresh, ...prev].slice(0, 25));
+    }
+  }, [topIndex, blocksQ.data]);
+
   if (blocksQ.isLoading) return <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   if (blocksQ.isError || !blocksQ.data) return <EmptyState icon={Boxes} title="Ledger unavailable" description="The ledger could not be read." testid="blockchain-error" />;
 
   const { total, blocks, latest } = blocksQ.data;
+  const isNew = (index: number) => newIndexes.includes(index);
 
   return (
     <div data-testid="blockchain-page">
@@ -35,10 +56,16 @@ export default function Blockchain() {
         description="Local permissioned, append-only hash-chained ledger. Only integrity metadata is anchored — never personal data or vote choices."
         testid="blockchain-header"
         actions={
-          <Button onClick={() => verifyQ.refetch()} disabled={verifyQ.isFetching} data-testid="blockchain-verify-btn">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700" data-testid="blockchain-live-indicator">
+              <Radio className={`h-3.5 w-3.5 ${blocksQ.isFetching ? "animate-pulse" : ""}`} aria-hidden="true" />
+              Live feed{newIndexes.length > 0 ? ` · ${newIndexes.length} new` : ""}
+            </span>
+            <Button onClick={() => verifyQ.refetch()} disabled={verifyQ.isFetching} data-testid="blockchain-verify-btn">
             {verifyQ.isFetching ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <ShieldCheck className="h-4 w-4" aria-hidden="true" />}
             Verify Election Integrity
-          </Button>
+            </Button>
+          </div>
         }
       />
 
@@ -97,8 +124,11 @@ export default function Blockchain() {
             </thead>
             <tbody>
               {blocks.map((b) => (
-                <tr key={b.current_hash} className="border-b border-slate-100" data-testid={`block-row-${b.index}`}>
-                  <td className="py-2.5 pr-3 font-mono text-xs">{b.index}</td>
+                <tr key={b.current_hash} className={`border-b border-slate-100 transition-colors duration-500 ${isNew(b.index) ? "bg-emerald-50" : ""}`} data-testid={`block-row-${b.index}`}>
+                  <td className="py-2.5 pr-3 font-mono text-xs">
+                    {b.index}
+                    {isNew(b.index) && <span className="ml-2 rounded bg-emerald-600 px-1.5 py-0.5 text-[10px] font-bold text-white" data-testid={`block-new-${b.index}`}>NEW</span>}
+                  </td>
                   <td className="py-2.5 pr-3 font-semibold text-xs">{b.event_type}</td>
                   <td className="py-2.5 pr-3"><HashText hash={b.record_hash} head={6} tail={4} /></td>
                   <td className="py-2.5 pr-3"><HashText hash={b.previous_hash} head={6} tail={4} /></td>

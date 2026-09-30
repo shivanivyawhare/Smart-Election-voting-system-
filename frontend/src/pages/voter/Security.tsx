@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { KeyRound, Loader2, Lock, ShieldCheck } from "lucide-react";
+import { History, KeyRound, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { apiGet } from "@/lib/api";
-import type { AuthMe, Voter } from "@/lib/types";
+import type { AuthMe, Voter, VoterActivityResponse } from "@/lib/types";
+import { fmtDateTime, timeAgo } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/PageHeader";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -14,6 +15,11 @@ const PROTECTIONS = [
 
 export default function VoterSecurity() {
   const me = useQuery({ queryKey: ["auth", "me"], queryFn: () => apiGet<AuthMe>("/auth/me") });
+  const activity = useQuery({
+    queryKey: ["voter", "activity"],
+    queryFn: () => apiGet<VoterActivityResponse>("/voter/activity"),
+    retry: false,
+  });
   const voter = me.data?.user as Voter | undefined;
 
   if (me.isLoading) {
@@ -43,6 +49,49 @@ export default function VoterSecurity() {
               </CardContent>
             </Card>
           ))}
+          <Card data-testid="voter-activity-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="font-heading text-base">Verification &amp; sign-in history</CardTitle>
+              <span className="flex items-center gap-1.5 text-xs text-slate-500" data-testid="voter-activity-signin-count">
+                <History className="h-3.5 w-3.5" aria-hidden="true" />
+                {activity.data?.sign_in_count ?? 0} sign-ins recorded
+                {activity.data?.last_sign_in_at ? ` · last ${timeAgo(activity.data.last_sign_in_at)}` : ""}
+              </span>
+            </CardHeader>
+            <CardContent className="max-h-96 overflow-y-auto">
+              {activity.isLoading ? (
+                <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+              ) : (activity.data?.activity ?? []).length === 0 ? (
+                <p className="py-4 text-sm text-muted-foreground" data-testid="voter-activity-empty">No activity has been recorded on this account yet.</p>
+              ) : (
+                <table className="w-full text-sm" data-testid="voter-activity-table">
+                  <thead>
+                    <tr className="border-b text-left text-xs uppercase tracking-wider text-slate-500">
+                      <th className="py-2 pr-3">Event</th>
+                      <th className="py-2 pr-3">Step</th>
+                      <th className="py-2 pr-3">IP</th>
+                      <th className="py-2">When</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(activity.data?.activity ?? []).map((a) => (
+                      <tr key={a.id} className="border-b border-slate-100" data-testid={`voter-activity-row-${a.id}`}>
+                        <td className="py-2 pr-3 text-xs font-semibold">{a.action.replaceAll("_", " ")}</td>
+                        <td className="py-2 pr-3 text-xs capitalize text-slate-600">{a.category}</td>
+                        <td className="py-2 pr-3 font-mono text-xs text-slate-500">{a.ip_masked ?? "—"}</td>
+                        <td className="py-2 text-xs text-slate-500" title={fmtDateTime(a.timestamp)}>{timeAgo(a.timestamp)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              <p className="mt-3 text-xs text-slate-500">
+                These rows come from the append-only audit log — they can never be edited or removed.
+                IP addresses are shown masked.
+              </p>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader><CardTitle className="font-heading text-base">Suspicious activity</CardTitle></CardHeader>
             <CardContent>

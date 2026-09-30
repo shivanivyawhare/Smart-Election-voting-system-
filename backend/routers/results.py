@@ -322,7 +322,7 @@ def _certificate_pdf(e: dict, result: dict) -> bytes:
               Paragraph(f"Total votes cast: {result['votes_cast']} &nbsp;&nbsp; "
                         f"Valid: {result['valid_votes']} &nbsp;&nbsp; "
                         f"Invalid: {result['invalid_votes']}", styles["Normal"]),
-              Paragraph(f"Turnout: {', '.join(t['turnout_pct'] + '%' for t in result['turnout'])}",
+              Paragraph("Turnout: " + (", ".join(f"{t['turnout_pct']}%" for t in result["turnout"]) or "n/a"),
                         styles["Normal"]),
               Spacer(1, 12),
               Paragraph("Integrity record", styles["Heading3"]),

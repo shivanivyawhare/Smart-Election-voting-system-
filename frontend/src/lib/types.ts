@@ -334,6 +334,53 @@ export interface MonitorResponse {
   votes_by_hour: { hour: string; votes: number }[];
 }
 
+export interface TurnoutConstituency {
+  constituency_id: string;
+  constituency_name: string;
+  eligible_voters: number;
+  votes_cast: number;
+  turnout_pct: number;
+  mean_turnout_pct: number;
+  gap_pct: number;
+  alert_level: string | null; // CRITICAL | HIGH | MEDIUM | null
+}
+
+export interface TurnoutAlert extends TurnoutConstituency {
+  election_id: string;
+  election_name: string;
+  election_code: string;
+}
+
+export interface TurnoutAlertsResponse {
+  open_elections: {
+    election_id: string;
+    election_name: string;
+    election_code: string;
+    mean_turnout_pct: number;
+    constituencies: TurnoutConstituency[];
+  }[];
+  alerts: TurnoutAlert[];
+  alert_count: number;
+}
+
+export interface VoterActivityEntry {
+  id: string;
+  action: string;
+  category: string;
+  result: string;
+  timestamp: string;
+  ip_masked: string | null;
+  user_agent: string | null;
+  current_hash: string;
+}
+
+export interface VoterActivityResponse {
+  activity: VoterActivityEntry[];
+  security_events: { id: string; event_type: string; severity: string; created_at: string; ip_masked: string | null }[];
+  sign_in_count: number;
+  last_sign_in_at: string | null;
+}
+
 export interface DashboardData {
   cards: {
     total_elections: number;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Activity, Loader2 } from "lucide-react";
+import { Activity, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 import { apiGet } from "@/lib/api";
-import type { Constituency, MonitorResponse } from "@/lib/types";
+import type { Constituency, MonitorResponse, TurnoutAlertsResponse } from "@/lib/types";
 import { fmtDateTime, timeAgo } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
@@ -13,6 +13,12 @@ export default function VotingMonitor() {
     queryKey: ["admin", "voting-monitor"],
     queryFn: () => apiGet<MonitorResponse>("/admin/voting/monitor"),
     refetchInterval: 15_000,
+    retry: false,
+  });
+  const alertsQ = useQuery({
+    queryKey: ["admin", "turnout-alerts"],
+    queryFn: () => apiGet<TurnoutAlertsResponse>("/admin/turnout/alerts"),
+    refetchInterval: 20_000,
     retry: false,
   });
   const constituenciesQ = useQuery({ queryKey: ["public", "constituencies"], queryFn: () => apiGet<Constituency[]>("/constituencies") });
@@ -37,6 +43,72 @@ export default function VotingMonitor() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <Card className="lg:col-span-2" data-testid="turnout-alerts-card">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="font-heading text-lg">Turnout alerts</CardTitle>
+            <span className="text-xs text-slate-500" data-testid="turnout-alerts-count">
+              {alertsQ.data?.alert_count ?? 0} lagging constituenc{(alertsQ.data?.alert_count ?? 0) === 1 ? "y" : "ies"}
+            </span>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {(alertsQ.data?.open_elections ?? []).length === 0 && (
+              <p className="text-sm text-muted-foreground" data-testid="turnout-alerts-no-open">No election is currently open.</p>
+            )}
+            {(alertsQ.data?.alerts ?? []).length === 0 && (alertsQ.data?.open_elections ?? []).length > 0 && (
+              <p className="flex items-center gap-2 text-sm text-emerald-700" data-testid="turnout-alerts-empty">
+                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                All constituencies are tracking close to the election mean turnout.
+              </p>
+            )}
+            {(alertsQ.data?.alerts ?? []).map((a) => (
+              <div
+                key={`${a.election_id}-${a.constituency_id}`}
+                className={`flex flex-wrap items-center justify-between gap-3 rounded-lg border px-3 py-3 text-sm ${
+                  a.alert_level === "CRITICAL" ? "border-red-300 bg-red-50"
+                    : a.alert_level === "HIGH" ? "border-amber-300 bg-amber-50"
+                    : "border-slate-200 bg-slate-50"
+                }`}
+                data-testid={`turnout-alert-${a.constituency_id}`}
+              >
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className={`mt-0.5 h-5 w-5 ${a.alert_level === "CRITICAL" ? "text-red-600" : "text-amber-600"}`} aria-hidden="true" />
+                  <div>
+                    <p className="font-heading font-bold">{a.constituency_name}</p>
+                    <p className="text-xs text-slate-600">
+                      {a.election_name} · {a.votes_cast} of {a.eligible_voters} eligible voters have voted
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-mono text-base font-bold">{a.turnout_pct}%</p>
+                  <p className="text-xs text-slate-600">
+                    {a.gap_pct}% vs {a.mean_turnout_pct}% mean · <span className="font-semibold">{a.alert_level}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+            {(alertsQ.data?.open_elections ?? []).map((e) => (
+              <div key={e.election_id} className="rounded-lg border border-slate-100 p-3" data-testid={`turnout-election-${e.election_code}`}>
+                <p className="text-xs uppercase tracking-wider text-slate-500">{e.election_name} · mean {e.mean_turnout_pct}%</p>
+                <div className="mt-2 flex flex-col gap-2">
+                  {e.constituencies.map((c) => (
+                    <div key={c.constituency_id} className="flex items-center gap-3 text-xs" data-testid={`turnout-bar-${c.constituency_id}`}>
+                      <span className="w-40 shrink-0 truncate">{c.constituency_name}</span>
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
+                        <div
+                          className={`h-full rounded-full ${c.alert_level ? "bg-amber-500" : "bg-primary"}`}
+                          style={{ width: `${Math.min(100, c.turnout_pct)}%` }}
+                        />
+                      </div>
+                      <span className="w-14 text-right font-mono">{c.turnout_pct}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader><CardTitle className="font-heading text-lg">Votes by constituency</CardTitle></CardHeader>
           <CardContent className="flex flex-col gap-2">

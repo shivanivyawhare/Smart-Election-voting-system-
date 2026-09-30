@@ -27,7 +27,7 @@ from lib.ledger import ensure_genesis
 from lib.security import new_id
 from routers import audit as audit_routes
 from routers import (auth, blockchain, candidates, elections, face, identity,
-                     liveness, results, system, voters, voting)
+                     liveness, monitoring, results, system, voters, voting)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -98,6 +98,7 @@ api_router.include_router(results.router)
 api_router.include_router(blockchain.router)
 api_router.include_router(audit_routes.router)
 api_router.include_router(system.router)
+api_router.include_router(monitoring.router)
 
 # Include the router in the main app — stays the last router statement
 app.include_router(api_router)
