@@ -1,0 +1,203 @@
+{
+  "project_title": "Smart E-Election System",
+  "archetype": "Civic Tech Authority & High-Integrity Institutional System (Swiss & High-Contrast with Deep Civic Navy and Sovereign Gold Accents)",
+  "emotional_tone": "Unwavering Trust, High Security, Verifiable Democracy, Clean Institutional Precision",
+  "fonts": {
+    "heading": "Outfit Variable",
+    "body": "Plus Jakarta Sans Variable",
+    "mono": "IBM Plex Mono",
+    "import_statements": [
+      "@import \"@fontsource-variable/outfit\";",
+      "@import \"@fontsource-variable/plus-jakarta-sans\";",
+      "@import \"@fontsource/ibm-plex-mono\";"
+    ],
+    "css_vars": {
+      "--font-heading": "'Outfit Variable', sans-serif",
+      "--font-sans": "'Plus Jakarta Sans Variable', sans-serif",
+      "--font-mono": "'IBM Plex Mono', monospace"
+    }
+  },
+  "typography": {
+    "scale_px": {
+      "display": 56,
+      "h1": 42,
+      "h2": 32,
+      "h3": 24,
+      "h4": 18,
+      "body": 16,
+      "caption": 14
+    },
+    "rules": {
+      "headings": "font-heading font-bold tracking-tight text-slate-900 dark:text-slate-100",
+      "body": "font-sans text-base leading-relaxed text-slate-700 dark:text-slate-300",
+      "labels": "font-sans uppercase text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400",
+      "code_hashes": "font-mono text-xs tracking-tight bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-2 py-1 rounded"
+    }
+  },
+  "colors": {
+    "palette_summary": "Civic Deep Navy (#0B192C / #0F2038), Crisp White / Warm Slate (#F8FAFC), Sovereign Saffron-Gold (#D97706 / #F59E0B) for active democracy cues, Emerald Green (#059669) for verified states, Crimson Red (#DC2626) for alerts/suspended, and Cobalt (#1D4ED8) for primary civic CTAs.",
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#F8FAFC",
+        "on_bg": "#0F172A",
+        "on_bg_muted": "#475569",
+        "roles": {
+          "link": "#1D4ED8",
+          "error": "#DC2626",
+          "success": "#059669",
+          "warning": "#D97706"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#0F172A",
+        "on_bg_muted": "#64748B",
+        "roles": {
+          "link": "#1D4ED8",
+          "error": "#DC2626",
+          "success": "#059669",
+          "warning": "#D97706"
+        }
+      },
+      {
+        "name": "sidebar_admin",
+        "kind": "solid",
+        "bg": "#0B192C",
+        "on_bg": "#F8FAFC",
+        "on_bg_muted": "#94A3B8",
+        "roles": {
+          "active_tab": "#38BDF8",
+          "badge_live": "#10B981"
+        }
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#0F172A",
+        "on_bg": "#F8FAFC",
+        "on_bg_muted": "#94A3B8"
+      },
+      {
+        "name": "hero_public",
+        "kind": "gradient",
+        "contrast_against": "#0B192C",
+        "guarantee": "scrim: linear-gradient(135deg, rgba(11,25,44,0.95) 0%, rgba(15,32,56,0.92) 100%)",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#CBD5E1",
+        "roles": {
+          "link": "#60A5FA",
+          "accent_badge": "#FBBF24"
+        }
+      },
+      {
+        "name": "voter_camera_frame",
+        "kind": "solid",
+        "bg": "#020617",
+        "on_bg": "#F8FAFC",
+        "on_bg_muted": "#94A3B8",
+        "roles": {
+          "guide_ring": "#22C55E",
+          "scanning_laser": "#38BDF8"
+        }
+      },
+      {
+        "name": "status_badge_verified",
+        "kind": "solid",
+        "bg": "#ECFDF5",
+        "on_bg": "#065F46",
+        "on_bg_muted": "#047857"
+      },
+      {
+        "name": "status_badge_pending",
+        "kind": "solid",
+        "bg": "#FEF3C7",
+        "on_bg": "#92400E",
+        "on_bg_muted": "#78350F"
+      },
+      {
+        "name": "status_badge_active",
+        "kind": "solid",
+        "bg": "#EFF6FF",
+        "on_bg": "#1E40AF",
+        "on_bg_muted": "#1D4ED8"
+      },
+      {
+        "name": "status_badge_failed",
+        "kind": "solid",
+        "bg": "#FEF2F2",
+        "on_bg": "#991B1B",
+        "on_bg_muted": "#B91C1C"
+      }
+    ],
+    "accent": "#1D4ED8",
+    "on_accent": "#FFFFFF",
+    "secondary_accent": "#D97706",
+    "on_secondary_accent": "#FFFFFF"
+  },
+  "entry_surfaces": {
+    "/": "Institutional civic hero with trust badge over deep navy gradient, 3-pillar proof cards (Identity, Liveness, Blockchain Ledger), live election banner, and quick portal routes",
+    "/login": "Dual authentication entry hub — Voter Sovereign Login (Aadhaar/OTP/Face) left panel vs Admin Security MFA gateway right panel",
+    "/voter-login": "Branded single-column civic access portal with Aadhaar / Voter ID credentials, instant OTP verification test simulator, and biometrics readiness badge",
+    "/admin-login": "High-security command-center MFA split login with sandbox 6-digit authenticator code and role selector badge",
+    "/voter/register": "Multi-step citizen registration wizard with live progress indicator, Aadhaar sandbox lookup, consent declaration, and photo submission",
+    "/voter/face-verification": "Interactive civic biometrics workstation with live camera viewport, elliptical alignment overlay, liveness challenge prompter, and real-time confidence meter",
+    "/results": "Public transparency ledger with election constituency selector, turnout metrics, donut and bar breakdown charts, and one-click cryptographic integrity verification"
+  },
+  "layout_and_navigation": {
+    "public": {
+      "header": "Clean white/glass sticky navbar (`z-50 bg-white/90 backdrop-blur-md border-b border-slate-200`) containing Indian National Emblem-inspired civic crest, navigation links (Home, How It Works, Security & Blockchain, Live Results, FAQ, Status), System Health Badge, and Dual Login Dropdown/Buttons.",
+      "footer": "Substantial institutional dark footer (`bg-slate-900 text-slate-300 py-16`) with citizen charter, security disclaimers, encryption specs, emergency audit contacts, and government compliance links."
+    },
+    "voter_portal": {
+      "layout": "Citizen-centric focused workflow: clean top header with Aadhaar mask ID, active verification status badge, remaining voting time, security status, and breadcrumbs navigation. Mobile bottom bar for Dashboard, Elections, Receipt, Security.",
+      "ballot_experience": "Distraction-free, single-screen candidate selection with verified party symbols, candidate manifesto preview, instant selection confirmation, vote review sheet, and cryptographic receipt issuance (SHA-256 vote hash + block index)."
+    },
+    "admin_portal": {
+      "layout": "Institutional command center: fixed left sidebar (`w-64 bg-[#0B192C] text-slate-200`) with categorized navigation (Overview, Election Engine, Voter & KYC, Fraud & Security, Blockchain Explorer, Live Analytics, Settings) and top navbar with active Admin Role badge, system load status, notifications, and MFA session indicator.",
+      "mobile": "Collapsible sheet drawer with full menu parity and bottom quick-action bar."
+    }
+  },
+  "media_and_assets": {
+    "image_urls": {
+      "civic_institution_bg": "https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHwxfHxnb3Zlcm5tZW50JTIwYnVpbGRpbmclMjBhcmNoaXRlY3R1cmV8ZW58MHx8fHwxNzkwNzgyMzkzfDA&ixlib=rb-4.1.0&q=85",
+      "civic_capitol": "https://images.unsplash.com/photo-1627397159237-d2acb7f500af?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHw0fHxnb3Zlcm5tZW50JTIwYnVpbGRpbmclMjBhcmNoaXRlY3R1cmV8ZW58MHx8fHwxNzkwNzgyMzkzfDA&ixlib=rb-4.1.0&q=85",
+      "security_vault": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxjeWJlcnNlY3VyaXR5JTIwc2hpZWxkJTIwZGlnaXRhbCUyMHNlY3VyaXR5fGVufDB8fHx8MTc5MDc4MjM5M3ww&ixlib=rb-4.1.0&q=85",
+      "digital_privacy_dashboard": "https://images.unsplash.com/photo-1751448555253-f39c06e29d82?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxjeWJlcnNlY3VyaXR5JTIwc2hpZWxkJTIwZGlnaXRhbCUyMHNlY3VyaXR5fGVufDB8fHx8MTc5MDc4MjM5M3ww&ixlib=rb-4.1.0&q=85"
+    },
+    "svg_icons_system": "Use standard Lucide icons: `ShieldCheck`, `Fingerprint`, `Camera`, `Vote`, `Building2`, `Lock`, `FileCheck2`, `Activity`, `Cpu`, `AlertTriangle`, `CheckCircle2`, `Layers`, `Search`, `RefreshCw`, `FileText`, `Users`."
+  },
+  "motion_and_animations": {
+    "philosophy": "Subtle, purposeful, non-distracting. Respects government and civic tech accessibility standards (`prefers-reduced-motion: reduce`).",
+    "key_interactions": {
+      "face_detection_scan": "Gentle pulsing scanline across the face viewfinder during capture (`ease-in-out` 2s loop).",
+      "liveness_challenge_transition": "Smooth slide-in of new instructions (Blink -> Turn Right -> Smile) using standard opacity/transform fade.",
+      "vote_submission": "Step-by-step verification progress with checkmark reveals (Encrypting ballot -> Mining block -> Committing ledger -> Generating receipt).",
+      "integrity_verify": "One-click hash verification calculation with green confirmation burst."
+    }
+  },
+  "accessibility_and_compliance": {
+    "wcag_level": "WCAG 2.2 AA / AAA for text and touch targets",
+    "min_touch_targets": "44px by 44px for buttons and ballot voting actions",
+    "focus_states": "3px solid #1D4ED8 with 2px offset on all interactive elements",
+    "test_attributes": "Every interactive and status element MUST feature a unique `data-testid` (e.g., `data-testid=\"voter-aadhaar-input\"`, `data-testid=\"candidate-vote-button-1\"`, `data-testid=\"blockchain-verify-btn\"`, `data-testid=\"election-status-badge\"`)."
+  },
+  "instructions_to_main_agent": {
+    "critical_flows_to_implement": [
+      "1. Comprehensive Public Landing Page (`/`, `/about`, `/how-it-works`, `/security`, `/privacy`, `/faq`, `/contact`, `/results`, `/system-status`)",
+      "2. Complete Sandbox Voter Journey: Registration -> Aadhaar OTP / Mock API verification -> Consent -> Webcam Face Verification (with realistic mock video/feed + fallback) -> Server Liveness Challenges (Blink, Turn Left, Turn Right, Smile) -> Voter Dashboard",
+      "3. Sovereign Ballot Cast Flow: Voter Dashboard -> Eligible Election -> Candidate Manifesto -> Cast Vote -> Confirmation Modal with biometric re-verify -> Cryptographic Receipt (Vote Hash, Block Index, Merkle Proof, Timestamp) -> Ballot Verification Tool",
+      "4. Institutional Admin Command Center: Multi-role Login with Sandbox MFA code (default: 123456 or generated) -> Admin Dashboard with Recharts (hourly votes, constituency turnout, fraud radar) -> Full Election State Machine (DRAFT -> SCHEDULED -> OPEN -> CLOSED -> COUNTING -> RESULTS_PUBLISHED -> ARCHIVED) with danger confirmations -> Candidate/Constituency/Voter CRUD -> Live Voting Monitor -> Fraud & Security Sentinel -> Append-only Audit Logs -> Blockchain Explorer with 'Verify Election Integrity' cryptographic validation",
+      "5. Public Results Portal (`/results`): Interactive constituency filtering, winner badges, turnout percentages, Recharts bar & donut visualizations, and 'Verify Result Integrity' cryptographic checker",
+      "6. System Status Dashboard showing real-time health of Identity Provider Sandbox, Face Verification engine, MongoDB Database, Blockchain Ledger, and Email/SMS notification dispatcher",
+      "7. Seed mock data with realistic Indian constituencies (e.g., New Delhi Central, Mumbai South, Bengaluru South, Varanasi, Chennai Central) and real-looking candidates with party symbols, manifestos, and voting records"
+    ],
+    "code_architecture": {
+      "backend": "FastAPI with routers for `auth`, `elections`, `voters`, `candidates`, `ballots`, `blockchain`, `audit`, and `system_status`. MongoDB async motor indexes on all query fields.",
+      "frontend": "React 19 with Vite, Tailwind v4, `@tanstack/react-query`, Shadcn UI primitives, Recharts, and Sonner toasts."
+    }
+  }
+}
